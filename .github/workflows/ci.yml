@@ -38,6 +38,12 @@ jobs:
         working-directory: backend
         run: npm install
 
+      - name: Set up database tables
+        working-directory: backend
+        env:
+          PGPASSWORD: postgres123
+        run: psql -h localhost -U postgres -d construction_log -f setup.sql
+
       - name: Run tests
         working-directory: backend
         env:
