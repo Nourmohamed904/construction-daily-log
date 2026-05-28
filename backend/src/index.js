@@ -9,10 +9,18 @@ const reportRoutes = require('./routes/reports');
 const app = express();
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://construction-daily-log.vercel.app'
-  ],
+  origin: function(origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://construction-daily-log.vercel.app'
+    ];
+    // Allow all Vercel preview deployments
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
