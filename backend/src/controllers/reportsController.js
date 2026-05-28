@@ -59,10 +59,13 @@ const getReportById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const report = await pool.query(
-      'SELECT * FROM daily_reports WHERE id = $1 AND user_id = $2',
-      [id, req.user.id]
-    );
+    // Admin can view any report, manager can only view their own
+    const query = req.user.role === 'admin'
+      ? 'SELECT dr.*, u.name as manager_name FROM daily_reports dr JOIN users u ON dr.user_id = u.id WHERE dr.id = $1'
+      : 'SELECT * FROM daily_reports WHERE id = $1 AND user_id = $2';
+
+    const values = req.user.role === 'admin' ? [id] : [id, req.user.id];
+    const report = await pool.query(query, values);
 
     if (report.rows.length === 0) {
       return res.status(404).json({ message: 'Report not found' });
