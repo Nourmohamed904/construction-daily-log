@@ -1,0 +1,121 @@
+.detail-container {
+  min-height: 100vh;
+  background: #f0f4f8;
+  padding: 1.5rem 1rem;
+}
+
+.detail-loading {
+  text-align: center;
+  margin-top: 3rem;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.detail-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 650px;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.detail-title {
+  font-size: 1.2rem;
+  color: #1a1a2e;
+}
+
+.detail-back {
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #374151;
+  font-size: 0.85rem;
+}
+
+.detail-pdf {
+  padding: 0.4rem 1rem;
+  background: #1a56db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-field {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.detail-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.detail-section {
+  margin-bottom: 1.2rem;
+}
+
+.detail-text {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 10px;
+  color: #374151;
+  line-height: 1.7;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.detail-text.issue {
+  background: #fef3c7;
+  border-left: 3px solid #f59e0b;
+}
+
+.detail-meta {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-align: right;
+  margin-top: 1.5rem;
+}
+.detail-header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .detail-card { padding: 1.25rem 1rem; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail-title { font-size: 1rem; }
+}
