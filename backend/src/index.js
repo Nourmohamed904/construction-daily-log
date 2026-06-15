@@ -44,15 +44,25 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error', error: err.message });
 });
 
-// Keep-alive ping every 14 minutes to prevent Render free tier from sleeping
+// Keep-alive ping every 14 minutes — keeps Render awake AND Supabase active
 if (process.env.NODE_ENV === 'production') {
-  setInterval(() => {
-    const https = require('https');
-    https.get('https://construction-daily-log-api.onrender.com/', (res) => {
-      console.log(`Keep-alive ping sent — status: ${res.statusCode}`);
-    }).on('error', (err) => {
-      console.log('Keep-alive ping failed:', err.message);
-    });
+  setInterval(async () => {
+    try {
+      // Keep Render awake
+      const https = require('https');
+      https.get('https://construction-daily-log-api.onrender.com/', (res) => {
+        console.log(`Keep-alive ping — status: ${res.statusCode}`);
+      }).on('error', (err) => {
+        console.log('Keep-alive failed:', err.message);
+      });
+
+      // Keep Supabase awake
+      const pool = require('./db/db');
+      await pool.query('SELECT 1');
+      console.log('Database keep-alive ping sent');
+    } catch (err) {
+      console.log('DB keep-alive failed:', err.message);
+    }
   }, 14 * 60 * 1000);
 }
 
