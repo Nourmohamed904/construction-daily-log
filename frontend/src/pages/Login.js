@@ -29,8 +29,12 @@ const Login = () => {
       loginUser(res.data.user, res.data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong');
-    } finally {
+  if (!err.response) {
+    setError('Server is starting up, please wait 30 seconds and try again.');
+  } else {
+    setError(err.response?.data?.message || 'Something went wrong');
+  }
+} finally {
       setLoading(false);
     }
   };

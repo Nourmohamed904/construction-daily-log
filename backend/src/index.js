@@ -14,7 +14,6 @@ app.use(cors({
       'http://localhost:3000',
       'https://construction-daily-log.vercel.app'
     ];
-    // Allow all Vercel preview deployments
     if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
@@ -23,14 +22,49 @@ app.use(cors({
   },
   credentials: true
 }));
+
 app.use(express.json());
 
+// Health check endpoint
 app.get('/', (req, res) => {
-  res.json({ message: 'Construction Daily Log API is running!' });
+  res.json({ message: 'Construction Daily Log API is running!', status: 'healthy' });
 });
 
 app.use('/api/auth', authRoutes);
 app.use('/api/reports', reportRoutes);
+
+// Handle routes that don't exist
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
+
+// Global error handler — catches any unhandled errors
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err.message);
+  res.status(500).json({ message: 'Internal server error', error: err.message });
+});
+
+// Keep-alive ping every 14 minutes to prevent Render free tier from sleeping
+if (process.env.NODE_ENV === 'production') {
+  setInterval(() => {
+    const https = require('https');
+    https.get('https://construction-daily-log-api.onrender.com/', (res) => {
+      console.log(`Keep-alive ping sent — status: ${res.statusCode}`);
+    }).on('error', (err) => {
+      console.log('Keep-alive ping failed:', err.message);
+    });
+  }, 14 * 60 * 1000);
+}
+
+// Handle uncaught exceptions — prevents full crash
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err.message);
+});
+
+// Handle unhandled promise rejections — prevents silent failures
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled Rejection:', reason);
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
